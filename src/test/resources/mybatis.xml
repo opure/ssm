@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+	<property name="dialect" value="mysql" />
+	</properties>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+	</settings>  
+    <typeAliases> 
+        <typeAlias alias="User" type="com.oneler.mybatis.models.User"/> 
+        <typeAlias alias="Article" type="com.oneler.mybatis.models.Article"/> 
+        <typeAlias alias="Category" type="com.oneler.mybatis.models.Category"/> 
+    </typeAliases> 
+    <mappers>
+        <mapper resource="com/oneler/mybatis/mapper/UserMapper.xml"></mapper>
+        <mapper resource="com/oneler/mybatis/mapper/CategoryMapper.xml"></mapper>
+        <mapper resource="com/oneler/mybatis/mapper/ArticleMapper.xml"></mapper>
+    </mappers>
+</configuration>
