@@ -8,7 +8,6 @@ import com.oneler.mybatis.models.User;
 import com.oneler.mybatis.services.UserService;
 
 public class MyBatisTest {
-
     private UserService userService;
     
     /**

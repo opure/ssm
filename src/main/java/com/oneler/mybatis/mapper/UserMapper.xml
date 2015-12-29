@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.oneler.mybatis.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.oneler.mybatis.models.User" >
+  <resultMap id="BaseResultMap" type="user" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="userName" property="username" jdbcType="VARCHAR" />
     <result column="userAge" property="userage" jdbcType="INTEGER" />
