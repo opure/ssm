@@ -9,6 +9,15 @@ public class User {
 
     private String useraddress;
 
+    
+    
+    public User(Integer id, String username, Integer userage) {
+        super();
+        this.id = id;
+        this.username = username;
+        this.userage = userage;
+    }
+
     public Integer getId() {
         return id;
     }
