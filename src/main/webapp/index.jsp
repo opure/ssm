@@ -3,6 +3,8 @@
 <html>
 <body>
 <h2>Hello World!</h2>
+<script type="text/javascript">
+</script>
 
 <form action="index" method="post" enctype="multipart/form-data">
 	File:<input type="file" name="file"/>
