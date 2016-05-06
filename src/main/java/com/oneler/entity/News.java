@@ -1,4 +1,4 @@
-package com.oneler.entity.entity;
+package com.oneler.entity;
 
 import java.sql.Blob;
 import java.util.Date;

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
@@ -12,124 +11,75 @@
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
- <!-- 采用注释的方式配置bean -->
-	<context:component-scan base-package="com.oneler"></context:component-scan>
-<!-- 	自动扫描组件，需要把controller去掉，否则影响事务管理 -->
-	<context:component-scan base-package="com.oneler">
-		<context:exclude-filter type="regex" expression="com.oneler.controler*"/>  
-	</context:component-scan>
-	<!-- task任务扫描注解 -->  
-	<task:annotation-driven/> 
-<!-- 	
-	proxy-target-class="true"强制使用cglib代理 如果为false则spring会自动选择
-	<aop:aspectj-autoproxy proxy-target-class="true" /> -->
+		<!-- 采用注释的方式配置bean -->
+	<context:component-scan base-package="com.oneler.*"></context:component-scan>
 
-	<!-- 数据库配置文件位置 -->
-	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true" />
-	<!-- 数据源配置,使用应用服务器的数据库连接池 -->
-
-	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
-	<!-- <property name="jndiName"> -->
-	<!-- <value>jdbc/scms/scms_datasource</value> -->
-	<!-- </property> -->
-	<!-- </bean> -->
-	<!-- 配置dbcp数据源 -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	<!-- 数据库连接池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="${jdbc.driverClassName}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		<!-- 队列中的最小等待数 -->
-		<property name="minIdle" value="${jdbc.minIdle}"></property>
-		<!-- 队列中的最大等待数 -->
-		<property name="maxIdle" value="${jdbc.maxIdle}"></property>
-		<!-- 最长等待时间，单位毫秒 -->
-		<property name="maxWait" value="${jdbc.maxWait}"></property>
-		<!-- 最大活跃数 -->
-		<property name="maxActive" value="${jdbc.maxActive}"></property>
-		<property name="initialSize" value="${jdbc.initialSize}"></property>
-		<!-- 从数据库连接池中取得连接时，对其的有效性进行检查 -->
-		<property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
-		<!-- 用来检查的SQL语句，“select 1”执行较快，是一个不错的检测语句 -->
-		<property name="validationQuery" value="${jdbc.validationQuery}"/>
-		<!-- 每timeBetweenEvictionRunsMillis毫秒秒检查一次连接池中空闲的连接 -->
-		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}" />
-		<!-- 把空闲时间超过minEvictableIdleTimeMillis毫秒的连接断开,直到连接池中的连接数到minIdle为止 -->
-		<property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}" />
+		<property name="initialPoolSize" value="${pool.initialPoolSize}" />
+		<property name="minPoolSize" value="${pool.minPoolSize}" />
+		<property name="maxPoolSize" value="${pool.maxPoolSize}" />
+		<property name="maxIdleTime" value="${pool.maxIdleTime}" />
+		<property name="acquireIncrement" value="${pool.acquireIncrement}" />
+		<property name="maxIdleTimeExcessConnections" value="${pool.maxIdleTimeExcessConnections}" />
 	</bean>
 
-	<!-- 配置mybitasSqlSessionFactoryBean -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<!-- <property name="configLocation" value="classpath:mybatis.xml"></property> -->
-	   <property name="mapperLocations" value="classpath:com/oneler/mybatis/mapper/*.xml"/>  
-        <property name="typeAliasesPackage" value="com.oneler.mybatis.models" /> 
-	</bean>
-	<!-- <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">  
-    <property name="mapperInterface" value="com.oneler.mybatis.dao.UserMapper"></property>  
-    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>  
-    </bean>   -->
-      <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-       <property name="basePackage" value="com.oneler.mybatis.dao" />
-       <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-       </bean> 
- 
-	 <!-- 配置SqlSessionTemplate -->
-	<!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean> -->
-	<!-- 事务配置 -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	<!-- 自定义properties配置-->
-	<!-- <bean id="propertiesReader" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-		<property name="locations">
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="packagesToScan">
 			<list>
-				<value>classpath:WebConfig.properties</value>
-				<value>classpath:BaiduPushConfig.properties</value>
+				<value>com.oneler.entity</value>
 			</list>
 		</property>
-	</bean> -->
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=${hibernate.dialect}
+				hibernate.show_sql=${hibernate.show_sql}
+				hibernate.format_sql=${hibernate.format_sql}
+				hibernate.hbm2ddl.auto=${hibernate.hbm2ddl.auto}
+				hibernate.cache.use_second_level_cache=${hibernate.cache.use_second_level_cache}
+				hibernate.cache.provider_class=${hibernate.cache.provider_class}
+				hibernate.cache.use_query_cache=${hibernate.cache.use_query_cache}
+				hibernate.jdbc.batch_size=${hibernate.jdbc.batch_size}
+				hibernate.jdbc.fetch_size=${hibernate.jdbc.fetch_size}
+			</value>
+		</property>
+	</bean>
+
+	<!-- 数据库配置文件位置 -->
+	<context:property-placeholder location="classpath*:*.properties"
+		ignore-unresolvable="true" />
+	<!-- 数据源配置,使用应用服务器的数据库连接池 -->
+
+
+	<!-- 事务配置 -->
+ <bean id="transactionManager"
+    class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory" />
+   </bean>
 	<!-- 使用annotation注解方式配置事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
-		
-	<!-- 配置事务特性 ，配置add、delete和update开始的方法，事务传播特性为required -->
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="save*" propagation="REQUIRED" />
-            <tx:method name="insert*" propagation="REQUIRED" />
-            <tx:method name="delete*" propagation="REQUIRED" />
-            <tx:method name="update*" propagation="REQUIRED" />
-            <tx:method name="login*" propagation="REQUIRED" />
-            <tx:method name="regist*" propagation="REQUIRED" />
-            <tx:method name="*" read-only="true" />
-        </tx:attributes>
-    </tx:advice>
 
-    <!-- 配置那些类的方法进行事务管理 -->
-  <!--   <aop:config>
-        <aop:pointcut id="allManagerMethod" expression="execution (* com.vanvalt.*.service.*.*(..))" />
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
-    </aop:config> -->
-	<!-- <context:property-placeholder location="classpath:memcached.properties" ignore-unresolvable="true" />
-	
-	<bean id="memcachedClient" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
-		<property name="servers" value="${org.mybatis.caches.memcached.servers}" />
-		<property name="protocol" value="BINARY" />
-		<property name="transcoder">
-			<bean class="net.spy.memcached.transcoders.SerializingTranscoder">
-				<property name="compressionThreshold" value="1024" />
-			</bean>
-		</property>
-		<property name="opTimeout" value="1000" />
-		<property name="timeoutExceptionThreshold" value="1998" />
-		<property name="hashAlg" value="KETAMA_HASH"/>
-		<property name="locatorType" value="CONSISTENT" />
-		<property name="failureMode" value="Redistribute" />
-		<property name="useNagleAlgorithm" value="false" />
-	</bean> -->
+	<!-- 配置事务特性 ，配置add、delete和update开始的方法，事务传播特性为required -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="login*" propagation="REQUIRED" />
+			<tx:method name="regist*" propagation="REQUIRED" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
 </beans>

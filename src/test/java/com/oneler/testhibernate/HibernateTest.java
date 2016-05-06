@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.oneler.entity.entity.News;
+import com.oneler.entity.News;
 import com.oneler.util.HibernateUtil;
 
 public class HibernateTest {
