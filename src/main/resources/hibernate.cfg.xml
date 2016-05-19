@@ -16,7 +16,7 @@
   <!-- 运行时是否格式化 SQL -->
   <property name="format_sql">true</property>
   <!-- 生成数据表的策略 -->
-  <property name="hbm2ddl.auto">create</property>
+  <property name="hbm2ddl.auto">update</property>
   <!-- 设置 Hibernate 的事务隔离级别 -->
   <property name="connection.isolation">2</property>
   <!-- 删除对象后, 使其 OID 置为 null -->
@@ -37,7 +37,7 @@
 <!--   <mapping resource="com/oneler/entity/GoodsT.hbm.xml" />
   <mapping resource="com/oneler/entity/RecipeT.hbm.xml" />
   <mapping resource="com/oneler/entity/GoodsRecipet.hbm.xml" /> -->
-  <mapping class="com.oneler.entity.entity.News"/>
+  <mapping class="com.oneler.entity.News"/>
   	
  </session-factory>
 </hibernate-configuration>

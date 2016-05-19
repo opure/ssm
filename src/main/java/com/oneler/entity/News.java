@@ -14,16 +14,19 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Index;
 import org.hibernate.type.TrueFalseType;
 
 @Entity
-@Table(name="news",catalog="goods")
+@Table(name="news",catalog="goods" )
 public class News {
 	
 	private Integer id; //field
 	private String title;
 	private String author;
+	private String descri;
+	private int count;
 	
 	
 	//使用 title + "," + content 可以来描述当前的 News 记录. 
@@ -81,7 +84,16 @@ public class News {
 		return date;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Formula(value="(select count(*) from news )")
+	public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
 	@Column(name="DATE")
 	public void setDate(Date date) {
 		this.date = date;
@@ -94,16 +106,24 @@ public class News {
 		this.date = date;
 	}
 	
-	public News() {
+	@Formula(value=("(SELECT concat(title, ',', author) FROM NEWS n WHERE n.id = id)"))
+	public String getDescri() {
+        return descri;
+    }
+
+    public void setDescri(String descri) {
+        this.descri = descri;
+    }
+
+    public News() {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "News [id=" + id + ", title=" + title + ", author=" + author
-				+ ", date=" + date + "]";
-	}
-	
-	
-	
+    @Override
+    public String toString() {
+        return "News [id=" + id + ", title=" + title + ", author=" + author + ", descri=" + descri + ", count=" + count
+                + ", content=" + content + ", picture=" + picture + ", date=" + date + "]";
+    }
+
+
 }

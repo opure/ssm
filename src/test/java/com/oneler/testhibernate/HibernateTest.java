@@ -22,11 +22,20 @@ public class HibernateTest {
     }
     
     @Test
+    public void testPropertyUpdate(){
+        News news = (News) session.get(News.class, 1);
+        news.setTitle("aaaa"); 
+        System.out.println(news);
+    }
+    
+    
+    @Test
     public void Test() {
         News news = new News();
         news.setAuthor("caohao");
         news.setTitle("1");
         session.save(news);
+        System.out.println(news);
     }
     
     @After

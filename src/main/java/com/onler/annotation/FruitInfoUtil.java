@@ -18,7 +18,7 @@ public class FruitInfoUtil {
                 System.out.println(strFruitName);
             }
             else if(field.isAnnotationPresent(FruitColor.class)){
-                FruitColor fruitColor= (FruitColor) field.getAnnotation(FruitColor.class);
+                FruitColor fruitColor= field.getAnnotation(FruitColor.class);
                 strFruitColor=strFruitColor+fruitColor.fruitColor().toString();
                 System.out.println(strFruitColor);
             }
