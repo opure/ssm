@@ -25,10 +25,10 @@ public class JsonTest {
     @ResponseBody
     @RequestMapping(value = "/index", headers="accept/*")
     public String returnIndex(@RequestBody String body) {
-       /* List<User> users = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         for (int i = 0; i<100; i++) {
             users.add(new User(i,"liming"+i,i));
-        }*/
+        }
         System.out.println(body);
         return "ddd";
     }
